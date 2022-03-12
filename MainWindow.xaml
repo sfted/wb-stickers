@@ -1,0 +1,440 @@
+﻿<Window
+    x:Class="WbStickers.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:WbStickers.Source.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:WbStickers.Source.ViewModels"
+    Title="WbStickers"
+    Width="800"
+    Height="600"
+    d:DataContext="{d:DesignInstance Type=vms:StickersViewModel}"
+    FontFamily="{StaticResource Font}"
+    mc:Ignorable="d">
+
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.75,1">
+            <GradientStop Offset="0.25" Color="White" />
+            <GradientStop Offset="1" Color="#4946D4" />
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="border"
+                            Padding="16,6"
+                            Background="White"
+                            BorderBrush="#ccc"
+                            BorderThickness="1"
+                            CornerRadius="3.5"
+                            SnapsToDevicePixels="True"
+                            TextBlock.Foreground="{TemplateBinding Foreground}">
+
+                            <ContentPresenter
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                RecognizesAccessKey="True" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#F3F7FF" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#C1D6FF" />
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#4946D4" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#eee" />
+                                <Setter TargetName="border" Property="TextBlock.Foreground" Value="#999" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                        <Border
+                            Name="border"
+                            Padding="4,2"
+                            Background="#fff"
+                            BorderBrush="#ccc"
+                            BorderThickness="1"
+                            CornerRadius="3.5"
+                            SnapsToDevicePixels="True">
+
+                            <ScrollViewer
+                                x:Name="PART_ContentHost"
+                                Margin="0" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#999" />
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#4946D4" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#eee" />
+                                <Setter Property="Foreground" Value="#999" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ListViewItem">
+            <Setter Property="Padding" Value="16,4" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border
+                            Name="border"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="#fff"
+                            BorderThickness="1"
+                            CornerRadius="3.5"
+                            SnapsToDevicePixels="true">
+                            <ContentPresenter />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#F3F7FF" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#C1D6FF" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="#4946D4" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#eee" />
+                                <Setter TargetName="border" Property="TextBlock.Foreground" Value="#999" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid
+        MaxWidth="1000"
+        MaxHeight="700"
+        Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="0,0,24,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="0,0,0,12"
+                VerticalAlignment="Center"
+                FontSize="24"
+                Text="Наклейка" />
+
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="0,0,0,12"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Command="{Binding SelectedSticker.SaveAsPdfCommand}"
+                    Content="Сохранить как PDF" />
+            </StackPanel>
+
+            <Border
+                x:Name="preview"
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Width="8cm"
+                Height="6cm"
+                Padding="0.2cm"
+                Background="White"
+                BorderBrush="Gray"
+                BorderThickness="0"
+                CornerRadius="7">
+
+                <WebBrowser
+                    helpers:BrowserBehavior.Html="{Binding SelectedSticker.HtmlPreview}"
+                    ScrollViewer.CanContentScroll="False"
+                    ScrollViewer.IsDeferredScrollingEnabled="False" />
+
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="10"
+                        Opacity="0.25"
+                        ShadowDepth="0"
+                        Color="#2C2B7F" />
+                </Border.Effect>
+            </Border>
+        </Grid>
+
+        <Grid
+            Grid.Row="0"
+            Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="0,0,0,12"
+                VerticalAlignment="Center"
+                FontSize="24"
+                Text="Поля" />
+
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="0,0,0,12"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Margin="0,0,8,0"
+                    Command="{Binding SelectedSticker.AddFieldCommand}"
+                    Content="Добавить поле" />
+                <Button
+                    Command="{Binding SelectedSticker.SaveAndRefreshCommand}"
+                    Content="Сохранить изменения" />
+            </StackPanel>
+
+            <Border
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Background="White"
+                CornerRadius="7"
+                Focusable="False">
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="10"
+                        Opacity="0.25"
+                        ShadowDepth="0"
+                        Color="#2C2B7F" />
+                </Border.Effect>
+            </Border>
+
+            <Border
+                x:Name="mask"
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Background="White"
+                CornerRadius="7" />
+
+            <Grid
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Height="{Binding ElementName=preview,
+                                 Path=ActualHeight}"
+                Background="White">
+
+                <Grid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=mask}" />
+                </Grid.OpacityMask>
+
+                <ScrollViewer Padding="8">
+                    <ItemsControl
+                        Focusable="False"
+                        ItemsSource="{Binding SelectedSticker.Fields}">
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox
+                                        Grid.Column="0"
+                                        Margin="0,0,8,0"
+                                        Padding="6,3"
+                                        IsEnabled="{Binding IsEditable}"
+                                        Text="{Binding Key,
+                                                       Mode=TwoWay,
+                                                       UpdateSourceTrigger=PropertyChanged}" />
+
+                                    <TextBox
+                                        Grid.Column="1"
+                                        Margin="0,0,8,0"
+                                        Padding="6,3"
+                                        Text="{Binding Value,
+                                                       Mode=TwoWay,
+                                                       UpdateSourceTrigger=PropertyChanged}" />
+
+                                    <Button
+                                        Grid.Column="2"
+                                        Padding="6,3"
+                                        Command="{Binding DeleteCommand}"
+                                        Content="Удалить"
+                                        IsEnabled="{Binding IsEditable}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+
+        <Grid
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,24,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="0,0,0,12"
+                VerticalAlignment="Center"
+                FontSize="24"
+                Text="Наклейки" />
+
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="0,0,0,12"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Command="{Binding AddStickerCommand}"
+                    Content="Добавить ещё наклейку" />
+            </StackPanel>
+
+            <Border
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Background="White"
+                CornerRadius="7"
+                Focusable="False">
+                <Border.Effect>
+                    <DropShadowEffect
+                        BlurRadius="10"
+                        Opacity="0.25"
+                        ShadowDepth="0"
+                        Color="#2C2B7F" />
+                </Border.Effect>
+            </Border>
+
+            <Border
+                x:Name="mask_2"
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Background="White"
+                CornerRadius="7" />
+
+            <Grid
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Background="White">
+
+                <Grid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=mask_2}" />
+                </Grid.OpacityMask>
+
+                <ListView
+                    Padding="8"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ItemsSource="{Binding Stickers}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                    SelectedItem="{Binding SelectedSticker,
+                                           Mode=TwoWay,
+                                           UpdateSourceTrigger=PropertyChanged}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Margin="0,0,24,0"
+                                    VerticalAlignment="Center"
+                                    TextTrimming="CharacterEllipsis">
+                                    <Run Text="Наклейка:" />
+                                    <Run Text="{Binding FieldsString}" />
+                                </TextBlock>
+
+                                <Button
+                                    Grid.Column="1"
+                                    Command="{Binding DeleteCommand}"
+                                    Content="Удалить"
+                                    FontSize="12" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
